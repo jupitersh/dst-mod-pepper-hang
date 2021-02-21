@@ -4,7 +4,7 @@ description = [[
 防止因长期没有向服务器放送数据而掉线
 ]]
 author = "辣椒小皇纸"
-version = "1.3.0"
+version = "1.3.1"
 forumthread = ""
 api_version = 10
 

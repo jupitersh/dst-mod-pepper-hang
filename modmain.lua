@@ -17,8 +17,10 @@ if GetModConfigData("mode") == 1 then
     AddPlayerPostInit(function(player)
         player:DoPeriodicTask(8*60, function(player)
             local ent = FindClosestInst(player)
-            local x,y,z = ent.Transform:GetWorldPosition()
-            GLOBAL.SendRPCToServer(25, 87, x, z, ent, false, 1, nil, nil, nil, false)
+            if ent then
+                local x,y,z = ent.Transform:GetWorldPosition()
+                GLOBAL.SendRPCToServer(25, 87, x, z, ent, false, 1, nil, nil, nil, false)
+            end
         end)
     end)
 
