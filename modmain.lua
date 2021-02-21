@@ -11,10 +11,9 @@ if GetModConfigData("mode") == 1 then
         localfn = function(params, caller)
             if params.status == "on" then
                 local center = caller:GetPosition()
-                caller.hangup_task = caller:DoPeriodicTask(5, function(player)
+                caller.hangup_task = caller:DoPeriodicTask(GetModConfigData("frequency"), function(player)
                     local x = center.x + math.random(0,4) - 2
                     local z = center.z + math.random(0,4) - 2
-                    print(x,z)
                     SendRPCToServer(RPC.LeftClick, ACTIONS.WALKTO.code, x, z)
                 end, 0)
                 caller.HUD.controls.networkchatqueue:DisplaySystemMessage("开始挂机模式")
