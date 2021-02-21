@@ -1,33 +1,20 @@
 if GetModConfigData("mode") == 1 then
 
-    AddUserCommand("hangup", {
-        prettyname = nil,
-        desc = nil,
-        permission = GLOBAL.COMMAND_PERMISSION.USER,
-        slash = true,   
-        usermenu = false,
-        servermenu = false,
-        params = {"status"} ,
-        localfn = function(params, caller)
-            if params.status == "on" then
-                local center = caller:GetPosition()
-                caller.hangup_task = caller:DoPeriodicTask(GetModConfigData("frequency"), function(player)
-                    local x = center.x + math.random(0,4) - 2
-                    local z = center.z + math.random(0,4) - 2
-                    SendRPCToServer(RPC.LeftClick, ACTIONS.WALKTO.code, x, z)
+    AddPlayerPostInit(function(player)
+        local worldid = GLOBAL.TheWorld.net._worldid and GLOBAL.TheWorld.net._worldid:value() or ""
+        if worldid == "10" then
+            local player_pt = player:GetPosition()
+            local nightlight_inst = FindClosestInst(player_pt.x, player_pt.y, player_pt.z, "nightlight")
+            local nightlight_pt = nightlight_inst:GetPosition()
+            if not (math.abs(player_pt.x - nightlight_pt.x) < 20 and math.abs(player_pt.z - nightlight_pt.z) < 20) then
+                player.hangup_task = player:DoPeriodicTask(GetModConfigData("frequency"), function(player)
+                    local x = player_pt.x + math.random(0,4) - 2
+                    local z = player_pt.z + math.random(0,4) - 2
+                    SendRPCToServer(GLOBAL.RPC.LeftClick, GLOBAL.ACTIONS.WALKTO.code, x, z)
                 end, 0)
-                caller.HUD.controls.networkchatqueue:DisplaySystemMessage("开始挂机模式")
-            elseif params.status == "off" then
-                if caller.hangup_task then
-                    caller.hangup_task:Cancel()
-                    caller.hangup_task = nil
-                end
-                caller.HUD.controls.networkchatqueue:DisplaySystemMessage("停止挂机模式")
-            else
-                caller.HUD.controls.networkchatqueue:DisplaySystemMessage("输入错误")
             end
-        end,
-    })
+        end
+    end)
 
 else
 
